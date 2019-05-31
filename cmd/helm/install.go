@@ -128,6 +128,7 @@ func addInstallFlags(f *pflag.FlagSet, client *action.Install) {
 	f.StringVar(&client.NameTemplate, "name-template", "", "specify template used to name the release")
 	f.BoolVar(&client.Devel, "devel", false, "use development versions, too. Equivalent to version '>0.0.0-0'. If --version is set, this is ignored.")
 	f.BoolVar(&client.DependencyUpdate, "dependency-update", false, "run helm dependency update before installing the chart")
+	f.StringVar(&client.Namespace, "namespace", "", "Namespace to Use")
 	addValueOptionsFlags(f, &client.ValueOptions)
 	addChartPathOptionsFlags(f, &client.ChartPathOptions)
 }
@@ -208,7 +209,9 @@ func runInstall(args []string, client *action.Install, out io.Writer) (*release.
 		}
 	}
 
-	client.Namespace = getNamespace()
+	if client.Namspace == "" {
+		client.Namespace = getNamespace()
+	}
 	return client.Run(chartRequested)
 }
 
